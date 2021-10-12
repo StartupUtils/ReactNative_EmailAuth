@@ -5,11 +5,17 @@ import { Formik } from "formik";
 import styles from "./styles";
 import { manageCode } from "../../utils/requests";
 import { AuthContext } from "../../utils/context";
+import { emailSignup } from "../../utils/requests";
 
 const CodeValidation = ({email, setEmail}) => {
     const [errorMessage, setErrorMessage] = useState(null);
     const [waitingResponse, setWaitingResponse] = useState(false)
     const {setToken} = useContext(AuthContext)
+    const resend = () => {
+        if(!waitingResponse){
+            emailSignup(email, setEmail, setErrorMessage, setWaitingResponse)
+        }
+    }
     return (
         <View style={styles.bottomButton}>
             <View>
@@ -19,8 +25,9 @@ const CodeValidation = ({email, setEmail}) => {
             <Formik
                 initialValues={{code: ""}}
                 onSubmit={(values) => {
-                    console.log(values)
-                    manageCode(email, values.code, setToken, setErrorMessage)
+                    if(!waitingResponse){
+                        manageCode(email, values.code, setToken, setErrorMessage, setWaitingResponse)
+                    }
                 }}
             >
                 {(props) => (
@@ -40,7 +47,7 @@ const CodeValidation = ({email, setEmail}) => {
                             <Text style={styles.appButtonText}>CONFIRM</Text>
                         </TouchableOpacity>
                         <View style={{top: 20, flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingLeft: "20%", paddingRight: "20%", textAlign: "center", alignItems: 'center'}}>
-                            <Text style={{fontFamily: 'firaSansBold'}} >Resend</Text><Text style={{fontFamily: 'firaSansBold'}} onPress={ ()=> {setEmail(null)}}>Change Email</Text>
+                            <Text style={{fontFamily: 'firaSansBold'}} onPress={() => {resend()}}>Resend</Text><Text style={{fontFamily: 'firaSansBold'}} onPress={ ()=> {setEmail(null)}}>Change Email</Text>
                         </View>
                     </View>
                 )}

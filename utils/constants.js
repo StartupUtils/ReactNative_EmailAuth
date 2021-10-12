@@ -7,4 +7,4 @@ export const SCREEN = {
     HEIGHT: height
 }
 
-export const URL = "https://aa10-67-170-48-171.ngrok.io";
+export const URL = "https://1bf0-67-170-48-171.ngrok.io";
